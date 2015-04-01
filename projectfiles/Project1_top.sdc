@@ -24,7 +24,7 @@
 # Clock constraints
 
 create_clock -name "clk50" -period 20.000ns [get_ports {CLOCK_50}] -waveform {0.000 10.000}
-create_clock -name "pclk" -period 80.000ns [get_ports {OV7670_PCLK}]
+create_clock -name "pclk" -period 40.000ns [get_ports {OV7670_PCLK}]
 
 # Automatically constrain PLL and other generated clocks
 derive_pll_clocks -create_base_clocks

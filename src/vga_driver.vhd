@@ -1,8 +1,7 @@
 ----------------------------------------------------------------------------------
--- VGA 640x480
+-- VGA 640x480@60hz
 -- http://tinyvga.com/vga-timing/640x480@60Hz
--- Because I slow down the addressing, each frame is read about 16 times.
--- This produces intensifies colours by 16. 
+-- Because of picking the high 13 bits of address, each pixel is read at most 8 times. 
 -- this results in a strectched 80 x 60 downscale into 480 x 640.
 ----------------------------------------------------------------------------------
 
@@ -38,12 +37,10 @@ architecture Behavioral of vga_driver is
   constant hMax  : natural := 799;
   constant hStartSync : natural := 656;
   constant hEndSync   : natural := 752;
-  constant hsync_active : std_logic := '1';
 
   constant vMax  : natural := 524;
   constant vStartSync : natural := 490;
   constant vEndSync   : natural := 491;
-  constant vsync_active : std_logic := '1';
 
   signal hCount : unsigned(9 downto 0) := (others => '0');
   signal vCount : unsigned(9 downto 0) := (others => '0');
@@ -114,15 +111,15 @@ begin
 	end if;
 
 	if hCount >= hStartSync and hCount < hEndSync then
-	  hs <= hsync_active;
+	  hs <= '1';
 	else
-	  hs <= not hsync_active;
+	  hs <= '0';
 	end if;
 
 	if vCount >= vStartSync and vCount < vEndSync then
-	  vs <= vsync_active;
+	  vs <= '1';
 	else
-	  vs <= not vsync_active;
+	  vs <= '0';
 	end if;
 
       else--	if surv = '1' then
@@ -210,7 +207,7 @@ begin
 	    blank <= '0';
 	    if hCount = hRes-1 then 
 	      if vCount( 2 downto 0 ) /= "111" then
-		address <= address - hRes +1; ---debug +debug2; -- I dont know why its 641 (/8 = 81). But it works.
+		address <= address - hRes +1; ---debug +debug2; --+1 for address, address 0 read already
 	      else
 		address <= address+1;
 	      end if;
@@ -229,15 +226,15 @@ begin
 	end if;
 
 	if hCount >= hStartSync and hCount < hEndSync then
-	  hs <= hsync_active;
+	  hs <= '1';
 	else
-	  hs <= not hsync_active;
+	  hs <= '0';
 	end if;
 
 	if vCount >= vStartSync and vCount < vEndSync then
-	  vs <= vsync_active;
+	  vs <= '1';
 	else
-	  vs <= not vsync_active;
+	  vs <= '0';
 	end if;
 
       end if; -- end surv
