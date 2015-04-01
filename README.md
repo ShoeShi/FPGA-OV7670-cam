@@ -75,4 +75,4 @@ LEDS/Switches/KEYS/
 	With the camera constantly writing frames, I am only allowed 1 read in the VGA component, therefore only this method can be used at the moment. The good news is, this saves a lot of memory, with the cost of lowering our resolution to 80 x 30.
 	I chose 80 x 30, because wide is a lot better for detecting left vs right.
 	
-	Original goal for this project was simply displaying captured data. So I am pretty happy with how far this is gotten. VHDL, Verilog, GPIO installation via cable, and other stuff learnt in a short time period.
+Original goal for this project was simply displaying captured data. So I am pretty happy with how far this is gotten. VHDL, Verilog, GPIO installation via cable, and other stuff learnt in a short time period.
