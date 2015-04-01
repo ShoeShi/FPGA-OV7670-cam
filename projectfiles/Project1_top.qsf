@@ -109,6 +109,9 @@ set_instance_assignment -name IO_STANDARD LVTTL -to KEY[1]
 set_instance_assignment -name IO_STANDARD LVTTL -to KEY[2]
 set_instance_assignment -name IO_STANDARD LVTTL -to KEY[3]
 set_location_assignment PIN_L1 -to CLOCK_50
+set_location_assignment PIN_D12 -to CLOCK_27[0]
+set_location_assignment PIN_E12 -to CLOCK_27[1]
+set_instance_assignment -name IO_STANDARD LVTTL -to CLOCK_27[1]
 set_instance_assignment -name IO_STANDARD LVTTL -to CLOCK_50
 set_location_assignment PIN_D9 -to VGA_R[0]
 set_location_assignment PIN_C9 -to VGA_R[1]
@@ -214,6 +217,18 @@ set_instance_assignment -name IO_STANDARD LVTTL -to HEX3[3]
 set_instance_assignment -name IO_STANDARD LVTTL -to HEX3[4]
 set_instance_assignment -name IO_STANDARD LVTTL -to HEX3[5]
 set_instance_assignment -name IO_STANDARD LVTTL -to HEX3[6]
+set_location_assignment PIN_A6 -to AUD_ADCLRCK
+set_location_assignment PIN_B6 -to AUD_ADCDAT
+set_location_assignment PIN_A5 -to AUD_DACLRCK
+set_location_assignment PIN_B5 -to AUD_DACDAT
+set_location_assignment PIN_B4 -to AUD_XCK
+set_location_assignment PIN_A4 -to AUD_BCLK
+set_instance_assignment -name IO_STANDARD LVTTL -to AUD_ADCLRCK
+set_instance_assignment -name IO_STANDARD LVTTL -to AUD_ADCDAT
+set_instance_assignment -name IO_STANDARD LVTTL -to AUD_DACLRCK
+set_instance_assignment -name IO_STANDARD LVTTL -to AUD_DACDAT
+set_instance_assignment -name IO_STANDARD LVTTL -to AUD_XCK
+set_instance_assignment -name IO_STANDARD LVTTL -to AUD_BCLK
 set_global_assignment -name STRATIX_CONFIGURATION_DEVICE EPCS4
 set_global_assignment -name RESERVE_ASDO_AFTER_CONFIGURATION "AS INPUT TRI-STATED"
 set_global_assignment -name STRATIX_DEVICE_IO_STANDARD "3.3-V LVTTL"
