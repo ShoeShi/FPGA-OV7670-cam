@@ -19,14 +19,16 @@ entity vga_driver is
 	 hs	    : out STD_LOGIC;
 	 vs	    : out STD_LOGIC;
 	 surv : in std_logic;
+	 rgb : in std_logic;
 	 debug : in natural;
 	 debug2 : in natural;
 	 buffer_addr : out STD_LOGIC_VECTOR(12 downto 0);
 	 buffer_data : in  STD_LOGIC_VECTOR(15 downto 0);
-	 motion : out natural
+	 newframe : out std_logic;
+	 leftmotion : out natural;
+	 rightmotion : out natural
        );
 end vga_driver;
-
 
 architecture Behavioral of vga_driver is
 
@@ -48,6 +50,10 @@ architecture Behavioral of vga_driver is
   signal address : unsigned(16 downto 0) := (others => '0');
   signal blank : std_logic := '1';
   signal compare : 	 std_logic := '0';
+  signal tempbuff : std_logic := '1';
+
+  signal sumright : natural := 0;
+  signal sumleft : natural := 0;
 begin
   buffer_addr <= std_logic_vector(address(15 downto 3)); 
 
@@ -60,6 +66,8 @@ begin
 
     if rising_edge(iVGA_CLK) then
       if surv = '0' then
+	sumleft <= 0;
+	sumright <= 0;
 	if hCount = hMax then
 	  hCount <= (others => '0');
 	  if vCount = vMax then
@@ -72,9 +80,9 @@ begin
 	end if;
 
 	if blank = '0' then 
-	  g  <= buffer_data(15 downto 12);
-	  r  <= buffer_data(10 downto 7);
-	  b  <= buffer_data(4 downto 1);
+	  g  <= buffer_data(11 downto 8);
+	  r  <= buffer_data(7 downto 4);
+	  b  <= buffer_data(3 downto 0);
 	else
 	  r  <= (others => '0');
 	  g  <= (others => '0');
@@ -122,50 +130,48 @@ begin
 	  hCount <= (others => '0');
 	  if vCount = vMax then
 	    vCount <= (others => '0');
+	    sumleft <= 0;
+	    sumright <= 0;
 	  else
 	    vCount <= vCount+1;
 	  end if;
+
 	else
+	  if hCount = hRes/2 then
+	    leftmotion <= sumleft;
+	    rightmotion <= sumright;
+	  end if;
 	  hCount <= hCount+1;
 	end if;
 
 	if blank = '0' then 
-	  if vCount < 320  then
 	    if compare = '0' then
-	      g0  := unsigned(buffer_data(15 downto 12));
-	      r0  := unsigned(buffer_data(10 downto 7));
-	      b0  := unsigned(buffer_data(4 downto 1));
-	      g  <= buffer_data(15 downto 12);
-	      r  <= buffer_data(10 downto 7);
-	      b  <= buffer_data(4 downto 1);
+		g0  := unsigned(buffer_data(11 downto 8));
+		r0  := unsigned(buffer_data(7 downto 4));
+		b0  := unsigned(buffer_data(3 downto 0));
+	      g  <= buffer_data(11 downto 8);
+	      r  <= buffer_data(7 downto 4);
+	      b  <= buffer_data(3 downto 0);
 	    else 
-	      if (abs(to_integer(unsigned(buffer_data(10 downto 7))) - to_integer(r0)) +
-	      abs(to_integer(unsigned(buffer_data(15 downto 12))) - to_integer(g0)) +
-	      abs(to_integer(unsigned(buffer_data(4 downto 1))) - to_integer(b0))) 
-	      > 20 then --+ debug - debug2 then
-		g<= "1111";
-		r<= "1111";
-		b<= "1111";
+              if (abs(to_integer(unsigned(buffer_data(7 downto 4))) - to_integer(r0)) +
+	      abs(to_integer(unsigned(buffer_data(11 downto 8))) - to_integer(g0)) +
+	      abs(to_integer(unsigned(buffer_data(3 downto 0))) - to_integer(b0))) 
+	      > 15+debug-debug then--+ debug - debug2 then
+		g <= "1111";
+
+		if hCount < hres/2 then
+		  sumleft <= sumleft + 1;
+		else
+		  sumright <= sumright + 1;
+		end if;
+
 	      else
-		r  <= (others => '0');
-		g  <= (others => '0');
-		b  <= (others => '0');
+	      g  <= buffer_data(11 downto 8);
+	      r  <= buffer_data(7 downto 4);
+	      b  <= buffer_data(3 downto 0);
 	      end if;
-	      motion <= natural(abs(to_integer(unsigned(buffer_data(10 downto 7))) - to_integer(r0)) +
-			abs(to_integer(unsigned(buffer_data(15 downto 12))) - to_integer(g0)) +
-			abs(to_integer(unsigned(buffer_data(4 downto 1))) - to_integer(b0)));
+
 	    end if;
-	  else
-	    if compare = '0' then
-	      g  <= buffer_data(15 downto 12);
-	      r  <= buffer_data(10 downto 7);
-	      b  <= buffer_data(4 downto 1);
-	    else 
-	      r  <= (others => '0');
-	      g  <= (others => '0');
-	      b  <= (others => '0');
-	    end if;
-	  end if;
 	else
 	  r   <= (others => '0');
 	  g <= (others => '0');
@@ -173,10 +179,7 @@ begin
 	end if;
 
 
-	if vCount  >= vRes/2 then
-	  address <= (others => '0');
-	  blank <= '1';
-	else	
+	if vCount  < vRes/2 then
 	  if hCount < hRes then
 	    blank <= '0';
 	    if hCount = hRes-1 then 
@@ -184,11 +187,12 @@ begin
 		address <= address - hRes +1; --+1 for address, address 0 read already
 	      else
 		if compare = '0' then
-		  address <= address+19208; -- 2400 * 8.		
+		  address <= address+19200; -- 2400 * 8.		
 		  compare <= '1';
 		else
-		  address <= address-19206;
+		  address <= address-19198;
 		  compare <= '0';
+		  tempbuff <= '1';
 		end if;
 	      end if;
 	    elsif vCount( 1 ) /= '1' then 
@@ -200,6 +204,28 @@ begin
 	  else
 	    blank <= '1';
 	  end if;
+	elsif vCount < vRes then
+
+	  if hCount < hRes then
+	    blank <= '0';
+	    if hCount = hRes-1 then 
+	      if vCount( 2 downto 0 ) /= "111" then
+		address <= address - hRes +1; ---debug +debug2; -- I dont know why its 641 (/8 = 81). But it works.
+	      else
+		address <= address+1;
+	      end if;
+	    elsif vCount( 1 ) /= '1' then -- Blank every other
+	      blank <='1';
+	      address <= address+1;
+	    else
+	      address <= address+1;
+	    end if;
+	  else
+	    blank <= '1';
+	  end if;
+	else
+	  address <= (others => '0');
+	  blank <= '1';
 	end if;
 
 	if hCount >= hStartSync and hCount < hEndSync then
