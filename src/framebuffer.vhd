@@ -61,10 +61,10 @@ ARCHITECTURE SYN OF framebuffer IS
 
 	COMPONENT altsyncram
 	GENERIC (
+		address_aclr_b		: STRING;
 		address_reg_b		: STRING;
 		clock_enable_input_a		: STRING;
 		clock_enable_input_b		: STRING;
-		clock_enable_output_a		: STRING;
 		clock_enable_output_b		: STRING;
 		intended_device_family		: STRING;
 		lpm_type		: STRING;
@@ -97,12 +97,12 @@ BEGIN
 
 	altsyncram_component : altsyncram
 	GENERIC MAP (
+		address_aclr_b => "NONE",
 		address_reg_b => "CLOCK1",
 		clock_enable_input_a => "BYPASS",
 		clock_enable_input_b => "BYPASS",
-		clock_enable_output_a => "BYPASS",
 		clock_enable_output_b => "BYPASS",
-		intended_device_family => "Cyclone II",
+		intended_device_family => "Cyclone III",
 		lpm_type => "altsyncram",
 		numwords_a => 8192,
 		numwords_b => 8192,
@@ -110,7 +110,7 @@ BEGIN
 		outdata_aclr_b => "NONE",
 		outdata_reg_b => "CLOCK1",
 		power_up_uninitialized => "FALSE",
-		ram_block_type => "M4K",
+		ram_block_type => "M9K",
 		widthad_a => 13,
 		widthad_b => 13,
 		width_a => 16,
@@ -160,7 +160,7 @@ END SYN;
 -- Retrieval info: PRIVATE: INDATA_REG_B NUMERIC "0"
 -- Retrieval info: PRIVATE: INIT_FILE_LAYOUT STRING "PORT_B"
 -- Retrieval info: PRIVATE: INIT_TO_SIM_X NUMERIC "0"
--- Retrieval info: PRIVATE: INTENDED_DEVICE_FAMILY STRING "Cyclone II"
+-- Retrieval info: PRIVATE: INTENDED_DEVICE_FAMILY STRING "Cyclone III"
 -- Retrieval info: PRIVATE: JTAG_ENABLED NUMERIC "0"
 -- Retrieval info: PRIVATE: JTAG_ID STRING "NONE"
 -- Retrieval info: PRIVATE: MAXIMUM_DEPTH NUMERIC "0"
@@ -194,12 +194,12 @@ END SYN;
 -- Retrieval info: PRIVATE: enable NUMERIC "0"
 -- Retrieval info: PRIVATE: rden NUMERIC "0"
 -- Retrieval info: LIBRARY: altera_mf altera_mf.altera_mf_components.all
+-- Retrieval info: CONSTANT: ADDRESS_ACLR_B STRING "NONE"
 -- Retrieval info: CONSTANT: ADDRESS_REG_B STRING "CLOCK1"
 -- Retrieval info: CONSTANT: CLOCK_ENABLE_INPUT_A STRING "BYPASS"
 -- Retrieval info: CONSTANT: CLOCK_ENABLE_INPUT_B STRING "BYPASS"
--- Retrieval info: CONSTANT: CLOCK_ENABLE_OUTPUT_A STRING "BYPASS"
 -- Retrieval info: CONSTANT: CLOCK_ENABLE_OUTPUT_B STRING "BYPASS"
--- Retrieval info: CONSTANT: INTENDED_DEVICE_FAMILY STRING "Cyclone II"
+-- Retrieval info: CONSTANT: INTENDED_DEVICE_FAMILY STRING "Cyclone III"
 -- Retrieval info: CONSTANT: LPM_TYPE STRING "altsyncram"
 -- Retrieval info: CONSTANT: NUMWORDS_A NUMERIC "8192"
 -- Retrieval info: CONSTANT: NUMWORDS_B NUMERIC "8192"
@@ -207,7 +207,7 @@ END SYN;
 -- Retrieval info: CONSTANT: OUTDATA_ACLR_B STRING "NONE"
 -- Retrieval info: CONSTANT: OUTDATA_REG_B STRING "CLOCK1"
 -- Retrieval info: CONSTANT: POWER_UP_UNINITIALIZED STRING "FALSE"
--- Retrieval info: CONSTANT: RAM_BLOCK_TYPE STRING "M4K"
+-- Retrieval info: CONSTANT: RAM_BLOCK_TYPE STRING "M9K"
 -- Retrieval info: CONSTANT: WIDTHAD_A NUMERIC "13"
 -- Retrieval info: CONSTANT: WIDTHAD_B NUMERIC "13"
 -- Retrieval info: CONSTANT: WIDTH_A NUMERIC "16"
@@ -230,6 +230,6 @@ END SYN;
 -- Retrieval info: GEN_FILE: TYPE_NORMAL framebuffer.vhd TRUE
 -- Retrieval info: GEN_FILE: TYPE_NORMAL framebuffer.inc FALSE
 -- Retrieval info: GEN_FILE: TYPE_NORMAL framebuffer.cmp TRUE
--- Retrieval info: GEN_FILE: TYPE_NORMAL framebuffer.bsf FALSE
+-- Retrieval info: GEN_FILE: TYPE_NORMAL framebuffer.bsf TRUE
 -- Retrieval info: GEN_FILE: TYPE_NORMAL framebuffer_inst.vhd TRUE
 -- Retrieval info: LIB_FILE: altera_mf

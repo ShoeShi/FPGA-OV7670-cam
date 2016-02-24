@@ -13,7 +13,7 @@ entity ov7670_driver is
 	 sioc  : out   STD_LOGIC;
 	 siod  : inout STD_LOGIC;
 	 sw : in std_logic_vector( 9 downto 0);
-	 key : in std_logic_vector( 3 downto 0)
+	 key : in std_logic_vector( 2 downto 0)
 	 --readcheck : out STD_LOGIC_VECTOR (7 downto 0)
        );
 end ov7670_driver;
@@ -23,7 +23,7 @@ architecture Behavioral of ov7670_driver is
     PORT(
 	  iclk      : IN std_logic;
 	  sw : in std_logic_vector(9 downto 0);
-	  key : in std_logic_vector( 3 downto 0);
+	  key : in std_logic_vector( 2 downto 0);
 	  gostate  : IN std_logic;          
 	  reg_loaded : OUT std_logic;
 	  regs : OUT std_logic_vector(15 downto 0)

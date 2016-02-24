@@ -10,7 +10,7 @@ entity OV7670_registers is
   Port ( iclk      : in  STD_LOGIC;
 	 gostate	    : in  STD_LOGIC;
 	 sw : in std_logic_vector(9 downto 0);
-	 key : in std_logic_vector(3 downto 0);
+	 key : in std_logic_vector(2 downto 0);
 	 regs	    : out  std_logic_vector(15 downto 0);
 	 reg_loaded  : out  STD_LOGIC
        );
